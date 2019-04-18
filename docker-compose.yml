@@ -1,0 +1,22 @@
+version: "3"
+services:
+  backend:
+    build: "."
+    image: "kataelastic/maven"
+    container_name: "kataelastic_backend"
+    networks:
+      - default
+    ports:
+      - 8080:8080
+      - 5005:5005
+    command: ['java', '-jar', 'kataelastic-0.0.1-SNAPSHOT.jar']
+
+  db:
+    image: "elasticsearch:5.6"
+    container_name: "kataelastic_elasticsearch"
+    networks:
+      - default
+    ports:
+      - 9200:9200
+networks:
+  default:
