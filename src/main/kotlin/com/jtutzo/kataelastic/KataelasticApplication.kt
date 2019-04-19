@@ -31,7 +31,7 @@ class ElasticsearchConfig {
     private lateinit var port: String
 
     @Bean(destroyMethod = "close")
-    fun client(): RestHighLevelClient = RestHighLevelClient(RestClient.builder(HttpHost(host, port.toInt())))
+    fun client(): RestHighLevelClient = RestHighLevelClient(RestClient.builder(HttpHost(host, port.toInt(), "http")))
 
 }
 
@@ -40,11 +40,9 @@ class ElasticsearchConfig {
 class SwaggerConfig {
 
     @Bean
-    fun api(): Docket {
-        return Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
-                .build()
-    }
+    fun api(): Docket = Docket(DocumentationType.SWAGGER_2)
+            .select()
+            .apis(RequestHandlerSelectors.any())
+            .paths(PathSelectors.any())
+            .build()
 }
