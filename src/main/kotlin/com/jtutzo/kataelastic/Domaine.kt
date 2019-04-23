@@ -9,5 +9,5 @@ interface RequestRepository {
     fun updateRctCode(code: String, value: String): String
     fun findByCode(code: String): Request
     fun findAll(): Set<Request>
-    fun searchByRctCode(rctCode: String): Set<Request>
+    fun search(term: String, users: Set<String> = emptySet(), teams: Set<String> = emptySet()): Set<Request>
 }

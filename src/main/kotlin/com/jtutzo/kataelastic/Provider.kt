@@ -52,10 +52,18 @@ class RequestElasticSearchRepository @Inject constructor(private val client: Res
         return getSearchResult(searchResponse)
     }
 
-    override fun searchByRctCode(rctCode: String): Set<Request> {
+    override fun search(term: String, users: Set<String>, teams: Set<String>): Set<Request> {
         val searchRequest = SearchRequest()
                 .source(SearchSourceBuilder()
-                        .query(QueryBuilders.termQuery("rctCode", rctCode)))
+                        .query(QueryBuilders
+                                .boolQuery()
+                                .must(QueryBuilders.boolQuery()
+                                        .should(QueryBuilders.termQuery("code", term))
+                                        .should(QueryBuilders.termQuery("rctCode", term))
+                                        .should(QueryBuilders.fuzzyQuery("dealName", term)))
+                                .must(QueryBuilders.boolQuery()
+                                        .should(QueryBuilders.termsQuery("users", users))
+                                        .should(QueryBuilders.termsQuery("teams", teams)))))
 
         val searchResponse = client.search(searchRequest, RequestOptions.DEFAULT)
 

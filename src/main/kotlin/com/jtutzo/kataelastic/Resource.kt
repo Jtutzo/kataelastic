@@ -16,8 +16,10 @@ class RequestResource @Inject constructor(private val requestRepository: Request
     @GetMapping("/{code}")
     fun getByCode(@PathVariable code: String) = requestRepository.findByCode(code)
 
-    @GetMapping("/search/by-rctcode/{rctCode}")
-    fun searchByRctCode(@PathVariable rctCode: String) = requestRepository.searchByRctCode(rctCode)
+    @GetMapping("/search")
+    fun search(@RequestParam("term") term: String,
+               @RequestParam("users") users: Set<String>,
+               @RequestParam("teams") teams: Set<String>) = requestRepository.search(term, users, teams)
 
     @PostMapping
     fun create(@RequestBody request: Request) = ResponseEntity(requestRepository.create(request), CREATED)

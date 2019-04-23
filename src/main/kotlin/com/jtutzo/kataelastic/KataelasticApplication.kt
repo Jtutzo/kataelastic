@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import springfox.documentation.builders.PathSelectors
 import springfox.documentation.builders.RequestHandlerSelectors
 import springfox.documentation.spi.DocumentationType
@@ -36,18 +37,22 @@ class ElasticsearchConfig {
     @Bean(destroyMethod = "close")
     fun client(): RestHighLevelClient = RestHighLevelClient(RestClient.builder(HttpHost(host, port.toInt(), "http")))
 
+}
+
+@Profile("createMapping")
+@Configuration
+class ElasticsearchMapping {
+
     @Autowired
     fun createRequestsMapping(client: RestHighLevelClient) {
         val request = CreateIndexRequest("requests")
-        val properties = hashMapOf(
-                "code" to mappingCodeField(),
-                "rctCode" to mappingRctCodeField(),
-                "dealName" to mappingDealNameField(),
-                "users" to mappingUsersField(),
-                "teams" to mappingTeamsField()
-        )
-        val mapping = hashMapOf(Pair("request", hashMapOf(Pair("properties", properties))))
-        request.mapping("request", mapping)
+                .mapping("request", hashMapOf("request" to hashMapOf("properties" to hashMapOf(
+                        "code" to mappingCodeField(),
+                        "rctCode" to mappingRctCodeField(),
+                        "dealName" to mappingDealNameField(),
+                        "users" to mappingUsersField(),
+                        "teams" to mappingTeamsField()
+                ))))
         client.indices().create(request, RequestOptions.DEFAULT)
     }
 
