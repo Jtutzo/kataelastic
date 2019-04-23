@@ -6,8 +6,8 @@ data class Request(val code: String, val rctCode: String, val dealName: String, 
 interface RequestRepository {
     fun create(request: Request): String
     fun update(request: Request): String
+    fun updateRctCode(code: String, value: String): String
     fun findByCode(code: String): Request
     fun findAll(): Set<Request>
     fun searchByRctCode(rctCode: String): Set<Request>
-    fun searchByUser(user: String): Set<Request>
 }

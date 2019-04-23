@@ -1,7 +1,46 @@
 {
-    "query":{
-        "match":{
-            "rctCode":"246-63"
-         }
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "bool": {
+            "should": [
+              {
+                "term": {
+                  "rctCode": "code1"
+                }
+              },
+              {
+                "term": {
+                  "code": "code1"
+                }
+              },
+              {
+                "match": {
+                  "dealName": "code1"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "bool": {
+            "should": [
+              {
+                "terms": {
+                  "users": ["jeremy.tutzo", "gaetane.persona"]
+                }
+              },
+              {
+                "terms": {
+                  "teams": ["jeremy.tutzo"]
+                }
+              }
+            ]
+          }
+        }
+      ]
     }
+  }
 }
+

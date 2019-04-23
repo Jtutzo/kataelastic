@@ -15,7 +15,8 @@ import javax.inject.Inject
 
 
 @Repository
-class RequestElasticSearchRepository @Inject constructor(private val client: RestHighLevelClient, private val objectMapper: ObjectMapper): RequestRepository {
+class RequestElasticSearchRepository @Inject constructor(private val client: RestHighLevelClient, private val objectMapper: ObjectMapper) : RequestRepository {
+
     private val index = "requests"
     private val type = "request"
 
@@ -51,24 +52,21 @@ class RequestElasticSearchRepository @Inject constructor(private val client: Res
         return getSearchResult(searchResponse)
     }
 
-    override fun searchByUser(user: String): Set<Request> {
+    override fun searchByRctCode(rctCode: String): Set<Request> {
         val searchRequest = SearchRequest()
                 .source(SearchSourceBuilder()
-                        .query(QueryBuilders.boolQuery().must(QueryBuilders.matchQuery("users", user))))
+                        .query(QueryBuilders.termQuery("rctCode", rctCode)))
 
         val searchResponse = client.search(searchRequest, RequestOptions.DEFAULT)
 
         return getSearchResult(searchResponse)
     }
 
-    override fun searchByRctCode(rctCode: String): Set<Request> {
-        val searchRequest = SearchRequest()
-                .source(SearchSourceBuilder()
-                        .query(QueryBuilders.matchQuery("rctCode", rctCode)))
+    override fun updateRctCode(code: String, value: String): String {
+        val requestMapper = hashMapOf(Pair("rctCode", value))
+        val updateRequest = UpdateRequest(index, type, code).doc(requestMapper)
 
-        val searchResponse = client.search(searchRequest, RequestOptions.DEFAULT)
-
-        return getSearchResult(searchResponse)
+        return client.update(updateRequest, RequestOptions.DEFAULT).result.name
     }
 
     private fun getSearchResult(response: SearchResponse): Set<Request> = response.hits.hits

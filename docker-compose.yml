@@ -12,11 +12,13 @@ services:
     command: ['java', '-jar', '-Dspring.profiles.active=docker', 'kataelastic-0.0.1-SNAPSHOT.jar']
 
   db:
-    image: "elasticsearch:6.7.1"
+    image: "elasticsearch:6.5.4"
     container_name: "kataelastic_elasticsearch"
     networks:
       - default
     ports:
       - 9200:9200
+    environment:
+      - discovery.type=single-node
 networks:
   default:

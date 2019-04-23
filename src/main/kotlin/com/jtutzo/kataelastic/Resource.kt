@@ -16,10 +16,7 @@ class RequestResource @Inject constructor(private val requestRepository: Request
     @GetMapping("/{code}")
     fun getByCode(@PathVariable code: String) = requestRepository.findByCode(code)
 
-    @GetMapping("/search/{user}")
-    fun searchByUser(@PathVariable user: String) = requestRepository.searchByUser(user)
-
-    @GetMapping("/search/rctcode/{rctCode}")
+    @GetMapping("/search/by-rctcode/{rctCode}")
     fun searchByRctCode(@PathVariable rctCode: String) = requestRepository.searchByRctCode(rctCode)
 
     @PostMapping
@@ -28,4 +25,6 @@ class RequestResource @Inject constructor(private val requestRepository: Request
     @PutMapping
     fun update(@RequestBody request: Request) = ResponseEntity(requestRepository.update(request), OK)
 
+    @PutMapping("/code/{code}/value/{value}")
+    fun updateRctCode(@PathVariable("code") code: String, @PathVariable("value") value: String) = ResponseEntity(requestRepository.updateRctCode(code, value), OK)
 }
