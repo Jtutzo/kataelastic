@@ -12,7 +12,7 @@ services:
     command: ['java', '-jar', '-Dspring.profiles.active=docker', 'kataelastic-0.0.1-SNAPSHOT.jar']
 
   db:
-    image: "elasticsearch:5.6"
+    image: "elasticsearch:6.7.1"
     container_name: "kataelastic_elasticsearch"
     networks:
       - default

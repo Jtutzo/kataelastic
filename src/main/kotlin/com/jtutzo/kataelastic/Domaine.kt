@@ -7,4 +7,7 @@ interface RequestRepository {
     fun create(request: Request): String
     fun update(request: Request): String
     fun findByCode(code: String): Request
+    fun findAll(): Set<Request>
+    fun searchByRctCode(rctCode: String): Set<Request>
+    fun searchByUser(user: String): Set<Request>
 }
